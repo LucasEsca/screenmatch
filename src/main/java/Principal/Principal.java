@@ -10,8 +10,10 @@ import com.AluraCurso.screenmatch.Model.DatosTemporadas;
 import com.AluraCurso.screenmatch.Service.ConsumoAPI;
 import com.AluraCurso.screenmatch.Service.ConvierteDatos;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
     
@@ -41,13 +43,26 @@ public class Principal {
                 
             //mostrar solo el titulo para las temporadas
            // for (int l = 0; l< datos.totalTemporadas(); l++){
-             //   List<DatosEpisodios> episodiosTemporada = temporadas.get(l).episodios();
-               // for(int j = 0; j< episodiosTemporada.size(); j++){
-                 //   System.out.println(episodiosTemporada.get(j).titulo());
+             //  List<DatosEpisodios> episodiosTemporada = temporadas.get(l).episodios();
+              //  for(int j = 0; j< episodiosTemporada.size(); j++){
+                //    System.out.println(episodiosTemporada.get(j).titulo());
                 
           //} 
     //}
-            temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+          //  temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+            
+            //convertir todas las informaciones a una lista del tipo datos episodios
+            List<DatosEpisodios> datosEpisodios = temporadas.stream()
+                    .flatMap(t -> t.episodios().stream())
+                    .collect(Collectors.toList());
+            
+            //top 5
+            System.out.println("Top 5");
+            datosEpisodios.stream()
+                    .filter(e -> !e.evaluacion().equalsIgnoreCase("N/A"))
+                    .sorted(Comparator.comparing(DatosEpisodios::evaluacion).reversed())
+                    .limit(5)
+                    .forEach(System.out::println);
     }
     
 }
