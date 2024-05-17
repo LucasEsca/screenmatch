@@ -7,8 +7,11 @@ package Principal;
 import com.AluraCurso.screenmatch.Model.DatosEpisodios;
 import com.AluraCurso.screenmatch.Model.DatosSeries;
 import com.AluraCurso.screenmatch.Model.DatosTemporadas;
+import com.AluraCurso.screenmatch.Model.Episodio;
 import com.AluraCurso.screenmatch.Service.ConsumoAPI;
 import com.AluraCurso.screenmatch.Service.ConvierteDatos;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -57,12 +60,36 @@ public class Principal {
                     .collect(Collectors.toList());
             
             //top 5
-            System.out.println("Top 5");
-            datosEpisodios.stream()
-                    .filter(e -> !e.evaluacion().equalsIgnoreCase("N/A"))
-                    .sorted(Comparator.comparing(DatosEpisodios::evaluacion).reversed())
-                    .limit(5)
-                    .forEach(System.out::println);
+           System.out.println("Top 5");
+           datosEpisodios.stream()
+                .filter(e -> !e.evaluacion().equalsIgnoreCase("N/A"))
+                .sorted(Comparator.comparing(DatosEpisodios::evaluacion).reversed())
+                   .limit(5)
+                   .forEach(System.out::println);
+            
+            
+            //convirtiendo los datos a una lista del tipo Episodio
+           List<Episodio> episodios = temporadas.stream()
+                   .flatMap(t -> t.episodios().stream()
+                    .map(d -> new Episodio( t.numero(),d)))
+                   .collect(Collectors.toList());
+           
+           episodios.forEach(System.out::println);
+           
+           
+           System.out.println("Fecha minima de episodios");
+           var fecha =teclado.nextInt();
+           teclado.nextLine();
+           LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
+           
+           DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+           episodios.stream()
+                   .filter(e -> e.getFechaDeLanzamiento() != null && e.getFechaDeLanzamiento().isAfter(fechaBusqueda))
+                   .forEach(e -> System.out.println(
+                        "Temporada " + e.getTemporada()+
+                           "Episodio " + e.getTitulo()+
+                           "Fecha de Lanzamiento " + e.getFechaDeLanzamiento().format(dtf)
+                           ));
     }
     
 }

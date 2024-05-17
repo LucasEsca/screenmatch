@@ -14,7 +14,7 @@ public record DatosEpisodios(
         
         @JsonAlias("Episode") Integer numeroEpisodio,
         
-         @JsonAlias("imbdRating")String evaluacion,
+         @JsonAlias("imbdRating") String evaluacion,
         
         @JsonAlias("Relased") String fechaDeLanzamiento) {
 
