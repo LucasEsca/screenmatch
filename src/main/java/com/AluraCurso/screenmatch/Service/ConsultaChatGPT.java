@@ -9,7 +9,7 @@ import com.theokanning.openai.service.OpenAiService;
 
 public class ConsultaChatGPT {
     public static String obtenerTraduccion(String texto) {
-        OpenAiService service = new OpenAiService("mi api key");
+        OpenAiService service = new OpenAiService("${GPT_KEY}");
 
 
         CompletionRequest requisicion = CompletionRequest.builder()

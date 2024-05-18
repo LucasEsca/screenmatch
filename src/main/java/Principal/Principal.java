@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Principal {
     private Scanner teclado = new Scanner(System.in);
     private ConsumoAPI consumoApi = new ConsumoAPI();
     private final String URL_BASE = "https://www.omdbapi.com/?t=";
-    private final String API_KEY = "mi api key";
+    private final String API_KEY = "&apikey=${OMDB_KEY}";
     private ConvierteDatos conversor = new ConvierteDatos();
     private List<DatosSerie> datosSerie = new ArrayList<>();
     private SerieRepository repositorio;
