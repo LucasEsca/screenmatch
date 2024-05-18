@@ -7,10 +7,7 @@ package com.AluraCurso.screenmatch.Model;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-/**
- *
- * @author Usuario
- */
+
 public class Episodio {
     private Integer temporada;
     private String titulo;

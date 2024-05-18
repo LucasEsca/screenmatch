@@ -4,9 +4,10 @@
  */
 package Principal;
 
-import com.AluraCurso.screenmatch.Model.DatosSeries;
+import com.AluraCurso.screenmatch.Model.DatosSerie;
 import com.AluraCurso.screenmatch.Model.DatosTemporadas;
 import com.AluraCurso.screenmatch.Model.Serie;
+import com.AluraCurso.screenmatch.Repository.SerieRepository;
 import com.AluraCurso.screenmatch.Service.ConsumoAPI;
 import com.AluraCurso.screenmatch.Service.ConvierteDatos;
 import java.util.ArrayList;
@@ -19,9 +20,14 @@ public class Principal {
     private Scanner teclado = new Scanner(System.in);
     private ConsumoAPI consumoApi = new ConsumoAPI();
     private final String URL_BASE = "https://www.omdbapi.com/?t=";
-    private final String API_KEY = "&apikey=4fc7c187";
+    private final String API_KEY = "mi api key";
     private ConvierteDatos conversor = new ConvierteDatos();
-    private List<DatosSeries> datosSeries = new ArrayList<>();
+    private List<DatosSerie> datosSerie = new ArrayList<>();
+    private SerieRepository repositorio;
+
+    public Principal(SerieRepository repository) {
+        this.repositorio = repository;
+    }
 
     public void muestraElMenu() {
         var opcion = -1;
@@ -57,16 +63,16 @@ public class Principal {
 
     }
 
-    private DatosSeries getDatosSerie() {
+    private DatosSerie getDatosSerie() {
         System.out.println("Escribe el nombre de la serie que deseas buscar");
         var nombreSerie = teclado.nextLine();
         var json = consumoApi.obtenerDatos(URL_BASE + nombreSerie.replace(" ", "+") + API_KEY);
         System.out.println(json);
-        DatosSeries datos = conversor.obtenerDatos(json, DatosSeries.class);
+        DatosSerie datos = conversor.obtenerDatos(json, DatosSerie.class);
         return datos;
     }
     private void buscarEpisodioPorSerie() {
-        DatosSeries datosSerie = getDatosSerie();
+        DatosSerie datosSerie = getDatosSerie();
         List<DatosTemporadas> temporadas = new ArrayList<>();
 
         for (int i = 1; i <= datosSerie.totalTemporadas(); i++) {
@@ -77,16 +83,15 @@ public class Principal {
         temporadas.forEach(System.out::println);
     }
     private void buscarSerieWeb() {
-        DatosSeries datos = getDatosSerie();
-        datosSeries.add(datos);
+        DatosSerie datos = getDatosSerie();
+        Serie serie = new Serie(datos);
+        repositorio.save(serie);
+        //datosSeries.add(datos);
         System.out.println(datos);
     }
 
     private void mostrarSeriesBuscadas() {
-        List<Serie> series = new ArrayList<>();
-        series = datosSeries.stream()
-                .map(d -> new Serie(d))
-                .collect(Collectors.toList());
+        List<Serie> series = repositorio.findAll();
 
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
