@@ -4,16 +4,40 @@
  */
 package com.AluraCurso.screenmatch.Controller;
 
+import com.AluraCurso.screenmatch.Repository.SerieRepository;
+import com.AluraCurso.screenmatch.Service.SerieService;
+import com.AluraCurso.screenmatch.dto.SerieDTO;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/series")
 public class SerieController {
-    
-    @GetMapping("/series")
-    public String mostrarMensaje(){
-        return "este es mi primer mensaje de la aplicacion";
+    @Autowired
+    private SerieService servicio;
+
+
+    @GetMapping()
+    public List<SerieDTO> obtenerTodasLasSeries(){
+        return servicio.obtenerTodasLasSeries();
     }
-    
-    
+
+    @GetMapping("/top5")
+    public List<SerieDTO> obtenerTop5(){
+        return servicio.obtenerTop5();
+    }
+    @GetMapping("/lanzamientos")
+    public List<SerieDTO> obtenerLanzamientosMasRecientes(){
+        return servicio.obtenerLanzamientosMasRecientes();
+    }
+
+    @GetMapping("/{id}")
+    public SerieDTO obtenerPorId(@PathVariable Long id){
+        return servicio.obtenerPorId(id);
+    }
 }
