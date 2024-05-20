@@ -44,7 +44,7 @@ public class Principal {
                     4 - Buscar series por titulo
                     5 - Top 5 mejores series
                     6 - Buscar Series por categoría
-                    7 - filtrar series por temporadas y evaluación
+                    7 - Filtrar series por temporadas y evaluación
                     8 - Buscar episodios por titulo
                     9 - Top 5 episodios por Serie
                                   
