@@ -4,8 +4,10 @@
  */
 package com.AluraCurso.screenmatch.Service;
 
+import com.AluraCurso.screenmatch.Model.Categoria;
 import com.AluraCurso.screenmatch.Model.Serie;
 import com.AluraCurso.screenmatch.Repository.SerieRepository;
+import com.AluraCurso.screenmatch.dto.EpisodioDTO;
 import com.AluraCurso.screenmatch.dto.SerieDTO;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SerieService {
-    @Autowired
+     @Autowired
     private SerieRepository repository;
 
     public List<SerieDTO> obtenerTodasLasSeries() {
@@ -43,5 +45,26 @@ public class SerieService {
                     s.getGenero(), s.getActores(), s.getSinopsis());
         }
         return null;
+    }
+
+    public List<EpisodioDTO> obtenerTodasLasTemporadas(Long id) {
+        Optional<Serie> serie = repository.findById(id);
+        if (serie.isPresent()){
+            Serie s = serie.get();
+            return s.getEpisodios().stream().map(e -> new EpisodioDTO(e.getTemporada(),e.getTitulo(),
+                    e.getNumeroEpisodio())).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    public List<EpisodioDTO> obtenerTemporadasPorNumero(Long id, Long numeroTemporada) {
+        return repository.obtenerTemporadasPorNumero(id,numeroTemporada).stream()
+                .map(e -> new EpisodioDTO(e.getTemporada(),e.getTitulo(),
+                        e.getNumeroEpisodio())).collect(Collectors.toList());
+    }
+
+    public List<SerieDTO> obtenerSeriesPorCategoria(String nombreGenero) {
+        Categoria categoria = Categoria.fromEspanol(nombreGenero);
+        return convierteDatos(repository.findByGenero(categoria));
     }
 }
